@@ -1,0 +1,5 @@
+rootProject.name = 'chiwawa-queue'
+include 'api-raw-socket'
+include 'api'
+include 'service'
+

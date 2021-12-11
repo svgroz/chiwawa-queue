@@ -1,0 +1,9 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api(project(":api"))
+    api "io.netty:netty-transport:${nettyVersion}"
+    api "ch.qos.logback:logback-classic:${logbackVersion}"
+}
