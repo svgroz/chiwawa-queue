@@ -1,17 +1,12 @@
 package org.svgroz.chiwawaq;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.net.Socket;
+import redis.clients.jedis.Jedis;
 
 /**
  * @author Simon Grozovsky svgroz@outlook.com
@@ -19,31 +14,23 @@ import java.net.Socket;
 public class NettyTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyTest.class);
 
-    static Socket socket;
-    static DataOutputStream outputStream;
-    static DataInputStream inputStream;
+    static Jedis jedis;
 
     @BeforeAll
     public static void setup() throws Exception {
-        socket = new Socket("localhost", 8000);
-        outputStream = new DataOutputStream(socket.getOutputStream());
-        inputStream = new DataInputStream(socket.getInputStream());
+        jedis = new Jedis("localhost", 8000);
     }
 
     @AfterAll
     public static void shutdown() {
-        IOUtils.closeQuietly(inputStream);
-        IOUtils.closeQuietly(outputStream);
-        IOUtils.closeQuietly(socket);
+        jedis.close();
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 22, 55})
-    public void test1(int request) throws Exception {
-        var response = 0;
-        outputStream.writeInt(request);
-        outputStream.flush();
-        response = inputStream.readInt();
-        Assertions.assertEquals(request + 1, response);
+    @ValueSource(strings = {
+            "bar", "x", "y", "z"
+    })
+    public void test1(String key) throws Exception {
+        jedis.set("foo", key);
     }
 }

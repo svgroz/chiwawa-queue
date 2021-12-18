@@ -10,4 +10,5 @@ module org.svgroz.chiwawaq.api.netty {
     requires org.slf4j;
 
     exports org.svgroz.chiwawaq.api.netty;
+    exports org.svgroz.chiwawaq.api.netty.resp;
 }
